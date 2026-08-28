@@ -11,6 +11,8 @@ bun.lockb.bak
 dist/
 build/
 out/
+.next/
+next-env.d.ts
 *.tsbuildinfo
 
 # Benchmark artifacts
@@ -61,3 +63,8 @@ desktop.ini
 *.log
 npm-debug.log*
 yarn-error.log*
+
+# Internal engineering record: the phase-by-phase plan, review findings and
+# decision log. Useful locally, not part of the published project — the
+# durable conclusions live in docs/ and the READMEs.
+PLAN.md

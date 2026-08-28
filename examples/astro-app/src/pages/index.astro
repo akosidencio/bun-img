@@ -1,0 +1,31 @@
+---
+import { Image, Picture } from "astro:assets";
+import hero from "../assets/hero.png";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>bun-img × astro:assets</title>
+  </head>
+  <body style="font: 16px/1.6 system-ui, sans-serif; max-width: 70ch; margin: 4rem auto; padding: 0 1.5rem;">
+    <h1>bun-img × astro:assets</h1>
+    <p>
+      Served by <code>bun-img/astro</code>, an Astro local image service. No
+      Sharp, no libvips, no native install step.
+    </p>
+
+    <!-- Unchanged application code: the transformation backend moved, the
+         component API did not. -->
+    <Image src={hero} width={800} alt="Hero" style="width:100%;height:auto;border-radius:4px" />
+
+    <h2>Picture, with widths the author chose</h2>
+    <Picture
+      src={hero}
+      widths={[320, 640, 900]}
+      formats={["webp"]}
+      alt="Responsive hero"
+      style="width:100%;height:auto;border-radius:4px"
+    />
+  </body>
+</html>

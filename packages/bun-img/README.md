@@ -94,7 +94,7 @@ export const { GET, HEAD } = createNextImageRoute({
 
 `<Image />` keeps working unchanged. Serve with `bun --bun next start`. The
 folder is `%5Fimage`, not `_image` — App Router excludes underscore-prefixed
-folders from routing. See [NEXT.md](./packages/bun-img/NEXT.md).
+folders from routing. See [NEXT.md](./NEXT.md).
 
 ## Astro
 
@@ -106,7 +106,7 @@ export default defineConfig({
 ```
 
 `<Image />` and `<Picture />` from `astro:assets` keep working unchanged. Build
-with `bun --bun astro build`. See [ASTRO.md](./packages/bun-img/ASTRO.md).
+with `bun --bun astro build`. See [ASTRO.md](./ASTRO.md).
 
 ## URL protocol
 
@@ -162,7 +162,8 @@ quality choice — prefer WebP.
 Under sustained load, 200 concurrent users over 5 minutes served **1,782,525
 requests with zero failures** and flat memory (74 → 70 MB).
 
-Method and raw numbers: [docs/phase0-findings.md](./docs/phase0-findings.md).
+Method, fixtures and raw numbers are in the repository under `docs/` and
+`benchmarks/`, and are reproducible with one command.
 
 ## Limitations
 
@@ -177,7 +178,8 @@ These are limits of Bun's image pipeline, not missing work:
 - **No animation.** GIF decodes the first frame only.
 - **No sharpen, blur, composite, watermark, arbitrary rotation or EXIF control.**
 
-Full capability matrix: [docs/capability-matrix.md](./docs/capability-matrix.md).
+The engine probes encode *and* decode support at runtime, on the machine
+actually serving traffic, rather than assuming either.
 
 ## Roadmap
 

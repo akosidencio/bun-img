@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (bun ${{ matrix.bun }})
+    # Linux is the deployment target and the only platform whose numbers this
+    # project publishes, so it is the only one gated on here.
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 1.4 is the floor: Bun.Image does not exist before it.
+        bun: ["1.4.0", "latest"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ matrix.bun }}
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test packages/
+
+      - name: Build
+        run: bun run build
+
+      - name: Verify the published entrypoints resolve
+        # A broken `exports` map is invisible to the test suite, which imports
+        # source paths directly. This is the check that would have caught it.
+        run: |
+          cd packages/bun-img
+          for entry in \
+            "dist/index.js" \
+            "dist/url/index.js" \
+            "dist/server/index.js" \
+            "dist/next/index.js" \
+            "dist/next/loader.js"
+          do
+            test -f "$entry" || { echo "missing $entry"; exit 1; }
+            test -f "${entry%.js}.d.ts" || { echo "missing types for $entry"; exit 1; }
+          done
+          echo "all entrypoints present with types"
+
+      - name: Assert no .ts specifiers survived into dist
+        # The published output must be consumable without Bun and without
+        # `allowImportingTsExtensions`; a leftover `.ts` import breaks both.
+        run: |
+          cd packages/bun-img
+          if grep -rn 'from "[^"]*\.ts"' dist/ ; then
+            echo "dist contains .ts import specifiers"
+            exit 1
+          fi
+          echo "no .ts specifiers in dist"
+
+      - name: Assert the package pulls in nothing native
+        run: |
+          cd packages/bun-img
+          deps=$(bun -e 'const p = await Bun.file("package.json").json(); console.log(JSON.stringify(p.dependencies ?? {}))')
+          test "$deps" = "{}" || { echo "expected zero dependencies, got $deps"; exit 1; }
+          echo "zero dependencies"
+
+  examples:
+    name: examples build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Build the package
+        run: bun run build
+
+      - name: Next example builds
+        # `next build` runs its page-data collection in Node, so this also
+        # guards the lazy engine construction that makes that possible.
+        run: cd examples/next-app && bun --bun node_modules/.bin/next build
+
+      - name: Astro example builds
+        # Astro's image generation calls transform() directly, so this is the
+        # end-to-end check that the engine boundary works — and it must run
+        # under Bun, since the engine needs Bun.Image.
+        run: cd examples/astro-app && bun --bun node_modules/.bin/astro build
+
+      - name: Bun server example boots and serves
+        run: |
+          bun examples/bun-server/server.ts &
+          for i in $(seq 1 40); do
+            if curl -fsS -o /dev/null "http://localhost:3000/_image/w_320,f_webp/hero.png"; then
+              break
+            fi
+            sleep 0.5
+          done
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Accept: image/webp' \
+            "http://localhost:3000/_image/w_800,q_75/hero.png")
+          test "$code" = "200" || { echo "endpoint returned $code"; exit 1; }
+          echo "endpoint served 200"

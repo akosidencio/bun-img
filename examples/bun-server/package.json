@@ -1,0 +1,11 @@
+{
+  "name": "@bun-img/example-bun-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun server.ts"
+  },
+  "dependencies": {
+    "bun-img": "workspace:*"
+  }
+}

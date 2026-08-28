@@ -1,0 +1,112 @@
+name: Release
+
+# Publishing is driven by a tag, so the released artifact is always tied to a
+# specific commit rather than to whatever happened to be on a branch.
+#
+#   bun run build && bun test packages/
+#   git tag v0.1.0 && git push origin v0.1.0
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Pack and verify without publishing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: publish bun-img to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # Required for npm provenance: the token is minted by GitHub, so the
+      # published package can be traced back to this workflow and commit.
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # npm does the publishing even though Bun does everything else: it is the
+      # only client that emits provenance attestations today.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Tag must match the package version
+        # Publishing v0.1.0 from a package.json that says 0.0.9 produces a
+        # release nobody can correlate with the tag. Fail before, not after.
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg=$(bun -e 'const p = await Bun.file("packages/bun-img/package.json").json(); console.log(p.version)')
+          if [ "$tag" != "$pkg" ]; then
+            echo "tag v$tag does not match package.json version $pkg"
+            exit 1
+          fi
+          echo "releasing bun-img@$pkg"
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test packages/
+
+      - name: Build
+        run: bun run build
+
+      - name: Verify the tarball
+        working-directory: packages/bun-img
+        run: |
+          npm pack --dry-run
+          # The published output must work without Bun and without
+          # `allowImportingTsExtensions`.
+          if grep -rn 'from "[^"]*\.ts"' dist/ ; then
+            echo "dist contains .ts import specifiers"
+            exit 1
+          fi
+          for entry in dist/index.js dist/url/index.js dist/server/index.js dist/next/index.js dist/next/loader.js; do
+            test -f "$entry" || { echo "missing $entry"; exit 1; }
+            test -f "${entry%.js}.d.ts" || { echo "missing types for $entry"; exit 1; }
+          done
+
+      - name: Publish
+        if: ${{ github.event_name == 'push' || inputs.dry_run == false }}
+        working-directory: packages/bun-img
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # `latest` only for a plain vX.Y.Z tag; anything with a suffix
+          # (v0.2.0-beta.1) publishes under that suffix instead, so a prerelease
+          # can never become the default install.
+          version="${GITHUB_REF_NAME#v}"
+          case "$version" in
+            *-*) tag="${version#*-}"; tag="${tag%%.*}" ;;
+            *)   tag="latest" ;;
+          esac
+          echo "publishing with dist-tag: $tag"
+          npm publish --provenance --access public --tag "$tag"
+
+      - name: Dry run summary
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run != false }}
+        run: echo "Dry run only — nothing was published."
+
+      - name: GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: packages/bun-img/*.tgz

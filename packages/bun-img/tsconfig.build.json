@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    // Our sources import with explicit `.ts` specifiers, which Bun resolves
+    // directly. `rewriteRelativeImportExtensions` turns them into `.js` in the
+    // emitted output, so the published package works for consumers that are not
+    // running Bun — Next's build being the immediate one.
+    "rewriteRelativeImportExtensions": true,
+    "types": ["bun"]
+  },
+  "include": ["src/**/*.ts"]
+}

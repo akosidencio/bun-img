@@ -1,0 +1,92 @@
+{
+  "name": "bun-img",
+  "version": "0.1.0",
+  "description": "Sharp-free image optimization and delivery for Bun. JPEG, PNG and WebP, resize, orientation, and native blur placeholders.",
+  "keywords": [
+    "bun",
+    "bun-image",
+    "image",
+    "image-optimization",
+    "image-resize",
+    "image-processing",
+    "resize",
+    "webp",
+    "jpeg",
+    "png",
+    "thumbnail",
+    "srcset",
+    "responsive-images",
+    "sharp-alternative",
+    "libvips",
+    "next-image",
+    "nextjs",
+    "astro",
+    "image-cdn",
+    "image-proxy"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "bun": ">=1.4.0"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./url": {
+      "bun": "./src/url/index.ts",
+      "types": "./dist/url/index.d.ts",
+      "default": "./dist/url/index.js"
+    },
+    "./server": {
+      "bun": "./src/server/index.ts",
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./next": {
+      "bun": "./src/next/index.ts",
+      "types": "./dist/next/index.d.ts",
+      "default": "./dist/next/index.js"
+    },
+    "./next/loader": {
+      "bun": "./src/next/loader.ts",
+      "types": "./dist/next/loader.d.ts",
+      "default": "./dist/next/loader.js"
+    },
+    "./astro": {
+      "bun": "./src/astro/index.ts",
+      "types": "./dist/astro/index.d.ts",
+      "default": "./dist/astro/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "NEXT.md",
+    "ASTRO.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "homepage": "https://github.com/bun-img/bun-img#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bun-img/bun-img.git",
+    "directory": "packages/bun-img"
+  },
+  "bugs": {
+    "url": "https://github.com/bun-img/bun-img/issues"
+  }
+}
