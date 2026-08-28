@@ -197,8 +197,31 @@ Cropping and AVIF are not on the roadmap — both wait on Bun.
 
 ## Requirements
 
-Bun **>= 1.4** with `Bun.Image`. Node.js is not supported and is not planned:
-`bun-img/url` works anywhere, but every pixel operation needs Bun.
+Bun **>= 1.4**, for `Bun.Image`.
+
+`bun-img/url` runs anywhere — Node, browsers, edge runtimes — because it only
+builds strings. Everything else needs Bun, and says so clearly rather than
+failing obscurely:
+
+```
+bun-img requires Bun; this is Node.js 22.22.2.
+
+  Image processing uses Bun.Image and cannot run anywhere else.
+  URL building works everywhere:  import { imageUrl, srcset } from "bun-img/url"
+
+  Running through a framework? Name the runtime explicitly:
+    bun --bun next start
+    bun --bun astro build
+```
+
+The check runs when you construct an engine, not when you import — so
+`next build` and Astro's config load, which both evaluate these modules under
+Node without creating an engine, keep working.
+
+There is deliberately **no install-time script**. npm and pnpm hide postinstall
+output by default, so a warning there would be invisible to most people while
+costing every consumer a lifecycle script — and "no postinstall step" is one of
+the reasons to use this package. `engines` names Bun instead.
 
 ## License
 

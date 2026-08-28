@@ -214,3 +214,34 @@ describe("public API", () => {
     }
   });
 });
+
+describe("runtime requirement", () => {
+  test("the guard distinguishes wrong-runtime from too-old-Bun", async () => {
+    // Two different problems, two different instructions. A single "requires
+    // Bun" message would tell a Bun 1.3 user to do something they already did.
+    const source = await Bun.file(join(SRC, "guard.ts")).text();
+    expect(source).toContain("bun upgrade");
+    expect(source).toContain("bun --bun");
+    expect(source).toContain("bun-img/url");
+  });
+
+  test("the package installs no lifecycle scripts", async () => {
+    // "No postinstall step" is a stated feature. An install-time warning would
+    // contradict it for very little: npm and pnpm both hide postinstall output
+    // by default, so it would be invisible to most people while still costing
+    // every consumer a lifecycle script.
+    const pkg = await Bun.file(join(PKG_ROOT, "package.json")).json();
+    for (const hook of ["preinstall", "install", "postinstall", "prepare"]) {
+      expect(pkg.scripts).not.toHaveProperty(hook);
+    }
+  });
+
+  test("engines names Bun, which is what a package manager can act on", async () => {
+    const pkg = await Bun.file(join(PKG_ROOT, "package.json")).json();
+    expect(pkg.engines).toEqual({ bun: ">=1.4.0" });
+    // No `node` range: Node is unsupported for image work, but `bun-img/url`
+    // genuinely runs there, and a false range would hard-fail those installs
+    // under yarn and under npm's engine-strict.
+    expect(pkg.engines.node).toBeUndefined();
+  });
+});

@@ -80,13 +80,13 @@
     "access": "public",
     "provenance": true
   },
-  "homepage": "https://github.com/bun-img/bun-img#readme",
+  "homepage": "https://github.com/akosidencio/bun-img#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bun-img/bun-img.git",
+    "url": "git+https://github.com/akosidencio/bun-img.git",
     "directory": "packages/bun-img"
   },
   "bugs": {
-    "url": "https://github.com/bun-img/bun-img/issues"
+    "url": "https://github.com/akosidencio/bun-img/issues"
   }
 }

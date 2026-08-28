@@ -9,6 +9,7 @@ bun.lockb.bak
 
 # Build output
 dist/
+*.tgz
 build/
 out/
 .next/
