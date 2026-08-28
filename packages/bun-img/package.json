@@ -72,7 +72,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && bun scripts/rewrite-dts-extensions.ts",
     "prepublishOnly": "bun run build"
   },
   "dependencies": {},

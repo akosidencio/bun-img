@@ -6,6 +6,26 @@
  * `cover` (plan finding R2). The type is the documentation.
  */
 
+/**
+ * Resampling kernels, mirroring `Bun.Image.Filter`.
+ *
+ * Declared here rather than referenced as `Bun.Image.Filter`, because a public
+ * type that names the `Bun` global forces every consumer to install
+ * `@types/bun` — without it the whole package's types fail to resolve, not just
+ * this one field.
+ */
+export type ResampleFilter =
+  | "nearest"
+  | "box"
+  | "bilinear"
+  | "linear"
+  | "cubic"
+  | "mitchell"
+  | "lanczos2"
+  | "lanczos3"
+  | "mks2013"
+  | "mks2021";
+
 /** Formats the engine can *emit*, subject to a runtime capability probe. */
 export type ImageFormat = "jpeg" | "png" | "webp" | "avif" | "heic";
 

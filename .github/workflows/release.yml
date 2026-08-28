@@ -68,20 +68,19 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Verify the tarball
+      - name: Verify the package a consumer would install
         working-directory: packages/bun-img
         run: |
+          # Type-checks a throwaway consumer against the built entrypoints with
+          # an ordinary web-app tsconfig. Catches what a grep over dist cannot:
+          # declarations pointing at unpublished .ts files, and public types
+          # naming the `Bun` global that a consumer does not have.
+          bun scripts/verify-package.ts
           npm pack --dry-run
-          # The published output must work without Bun and without
-          # `allowImportingTsExtensions`.
           if grep -rn 'from "[^"]*\.ts"' dist/ ; then
             echo "dist contains .ts import specifiers"
             exit 1
           fi
-          for entry in dist/index.js dist/url/index.js dist/server/index.js dist/next/index.js dist/next/loader.js; do
-            test -f "$entry" || { echo "missing $entry"; exit 1; }
-            test -f "${entry%.js}.d.ts" || { echo "missing types for $entry"; exit 1; }
-          done
 
       - name: Publish
         if: ${{ github.event_name == 'push' || inputs.dry_run == false }}

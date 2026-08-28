@@ -44,26 +44,16 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Verify the published entrypoints resolve
-        # A broken `exports` map is invisible to the test suite, which imports
-        # source paths directly. This is the check that would have caught it.
-        run: |
-          cd packages/bun-img
-          for entry in \
-            "dist/index.js" \
-            "dist/url/index.js" \
-            "dist/server/index.js" \
-            "dist/next/index.js" \
-            "dist/next/loader.js"
-          do
-            test -f "$entry" || { echo "missing $entry"; exit 1; }
-            test -f "${entry%.js}.d.ts" || { echo "missing types for $entry"; exit 1; }
-          done
-          echo "all entrypoints present with types"
+      - name: Verify the published package
+        # Not a grep over dist: this writes a throwaway consumer against the
+        # built entrypoints and type-checks it with an ordinary web-app tsconfig
+        # (DOM lib, bundler resolution, no allowImportingTsExtensions). A grep
+        # passed while every .d.ts still pointed at unpublished .ts files, and
+        # again while the public types named the `Bun` global that a consumer
+        # does not have.
+        run: cd packages/bun-img && bun scripts/verify-package.ts
 
       - name: Assert no .ts specifiers survived into dist
-        # The published output must be consumable without Bun and without
-        # `allowImportingTsExtensions`; a leftover `.ts` import breaks both.
         run: |
           cd packages/bun-img
           if grep -rn 'from "[^"]*\.ts"' dist/ ; then

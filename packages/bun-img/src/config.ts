@@ -12,7 +12,7 @@
  *   - `maxPixels` is always passed to `Bun.Image` explicitly. Its own default is
  *     268,402,689 — Sharp parity, not safety.
  */
-import type { ImageFormat } from "./types.ts";
+import type { ImageFormat, ResampleFilter } from "./types.ts";
 
 export interface ImageLimits {
   /** Rejected before any pixel buffer is allocated, by Bun itself. */
@@ -55,7 +55,7 @@ export interface ImageEngineConfig {
   quantize?: boolean;
   limits?: Partial<ImageLimits>;
   /** Resampling kernel. Passed explicitly on every resize. */
-  filter?: Bun.Image.Filter;
+  filter?: ResampleFilter;
 }
 
 export interface ResolvedConfig {
@@ -68,7 +68,7 @@ export interface ResolvedConfig {
   readonly strictQualities: boolean;
   readonly quantize: boolean;
   readonly limits: Readonly<ImageLimits>;
-  readonly filter: Bun.Image.Filter;
+  readonly filter: ResampleFilter;
 }
 
 const MB = 1024 * 1024;

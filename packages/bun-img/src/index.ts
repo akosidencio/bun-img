@@ -92,6 +92,7 @@ export type {
   ImageTransform,
   NormalizedTransform,
   OptimizedImage,
+  ResampleFilter,
   SourceIdentity,
   SourceInfo,
 } from "./types.ts";
