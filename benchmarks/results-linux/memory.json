@@ -1,0 +1,78 @@
+{
+  "fixture": "chroma-4k",
+  "concurrency": 8,
+  "iters": 40,
+  "samples": 3,
+  "runs": {
+    "bun": [
+      {
+        "engine": "bun",
+        "coldMs": 264.72063499999996,
+        "baselineRssMB": 27.91015625,
+        "peakRssMB": 162.08984375,
+        "settledRssMB": 49.29296875,
+        "opsPerSec": 18.642847183049202
+      },
+      {
+        "engine": "bun",
+        "coldMs": 253.19727999999998,
+        "baselineRssMB": 28.19921875,
+        "peakRssMB": 155.8984375,
+        "settledRssMB": 40.44140625,
+        "opsPerSec": 13.745270844208234
+      },
+      {
+        "engine": "bun",
+        "coldMs": 212.043962,
+        "baselineRssMB": 32.8671875,
+        "peakRssMB": 145.61328125,
+        "settledRssMB": 47.9609375,
+        "opsPerSec": 16.86154049950207
+      }
+    ],
+    "sharp": [
+      {
+        "engine": "sharp",
+        "coldMs": 535.938452,
+        "baselineRssMB": 64.9453125,
+        "peakRssMB": 224.921875,
+        "settledRssMB": 216.2734375,
+        "opsPerSec": 14.637337348837024
+      },
+      {
+        "engine": "sharp",
+        "coldMs": 561.57146,
+        "baselineRssMB": 64.65625,
+        "peakRssMB": 227.17578125,
+        "settledRssMB": 194.0703125,
+        "opsPerSec": 11.796519899522139
+      },
+      {
+        "engine": "sharp",
+        "coldMs": 503.32131100000004,
+        "baselineRssMB": 66.8984375,
+        "peakRssMB": 231.7890625,
+        "settledRssMB": 207.12890625,
+        "opsPerSec": 16.756305051154143
+      }
+    ]
+  },
+  "stats": {
+    "bun": {
+      "coldMs": 253.19727999999998,
+      "baselineRssMB": 28.19921875,
+      "peakRssMB": 155.8984375,
+      "settledRssMB": 47.9609375,
+      "opsPerSec": 16.86154049950207
+    },
+    "sharp": {
+      "coldMs": 535.938452,
+      "baselineRssMB": 64.9453125,
+      "peakRssMB": 227.17578125,
+      "settledRssMB": 207.12890625,
+      "opsPerSec": 14.637337348837024
+    }
+  },
+  "rssRatio": 0.6862458517461355,
+  "coldRatio": 0.47243723426659445
+}

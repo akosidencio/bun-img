@@ -1,0 +1,15 @@
+{
+  "name": "@bun-img/core",
+  "version": "0.0.0",
+  "description": "Bun-native image transformation engine. No Sharp, no libvips.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./url": "./src/url/index.ts",
+    "./sources": "./src/sources/types.ts"
+  },
+  "files": ["src"],
+  "engines": { "bun": ">=1.4.0" },
+  "dependencies": {},
+  "license": "MIT"
+}

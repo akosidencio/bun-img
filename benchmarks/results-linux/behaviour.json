@@ -1,0 +1,108 @@
+{
+  "bunVersion": "1.4.0",
+  "platform": "linux/x64",
+  "encode": {
+    "jpeg": {
+      "system": {
+        "ok": true,
+        "bytes": 719
+      },
+      "bun": {
+        "ok": true,
+        "bytes": 719
+      }
+    },
+    "png": {
+      "system": {
+        "ok": true,
+        "bytes": 841
+      },
+      "bun": {
+        "ok": true,
+        "bytes": 841
+      }
+    },
+    "webp": {
+      "system": {
+        "ok": true,
+        "bytes": 312
+      },
+      "bun": {
+        "ok": true,
+        "bytes": 312
+      }
+    },
+    "heic": {
+      "system": {
+        "ok": false,
+        "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+      },
+      "bun": {
+        "ok": false,
+        "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+      }
+    },
+    "avif": {
+      "system": {
+        "ok": false,
+        "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+      },
+      "bun": {
+        "ok": false,
+        "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+      }
+    }
+  },
+  "decode": {
+    "jpeg": {
+      "ok": true,
+      "reported": "jpeg"
+    },
+    "png": {
+      "ok": true,
+      "reported": "png"
+    },
+    "webp": {
+      "ok": true,
+      "reported": "webp"
+    },
+    "gif": {
+      "ok": true,
+      "reported": "gif"
+    },
+    "tiff": {
+      "ok": false,
+      "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+    },
+    "avif": {
+      "ok": false,
+      "code": "ERR_IMAGE_FORMAT_UNSUPPORTED"
+    }
+  },
+  "alphaToJpeg": {
+    "bun": {
+      "ok": true,
+      "corner": [
+        201,
+        169,
+        168
+      ],
+      "verdict": "source colour (alpha ignored)"
+    },
+    "sharp": {
+      "ok": true,
+      "corner": [
+        0,
+        0,
+        0
+      ],
+      "verdict": "BLACK"
+    }
+  },
+  "alphaToWebp": {
+    "hasAlpha": true,
+    "channels": 4
+  },
+  "placeholderDeterministic": true,
+  "placeholderBytes": 766
+}

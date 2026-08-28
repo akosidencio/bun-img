@@ -1,0 +1,1911 @@
+{
+  "width": 800,
+  "qualities": [
+    40,
+    50,
+    60,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95
+  ],
+  "targets": [
+    0.96,
+    0.98,
+    0.99
+  ],
+  "rows": [
+    {
+      "fixture": "landscape-1080p",
+      "character": "sky gradient + rock detail",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 6202,
+          "ssim": 0.9714954009473036
+        },
+        {
+          "quality": 50,
+          "bytes": 7006,
+          "ssim": 0.9734938509972064
+        },
+        {
+          "quality": 60,
+          "bytes": 7950,
+          "ssim": 0.974776262443734
+        },
+        {
+          "quality": 70,
+          "bytes": 8850,
+          "ssim": 0.9764494724085976
+        },
+        {
+          "quality": 75,
+          "bytes": 9458,
+          "ssim": 0.9769069687334253
+        },
+        {
+          "quality": 80,
+          "bytes": 11538,
+          "ssim": 0.9791176438879613
+        },
+        {
+          "quality": 85,
+          "bytes": 14598,
+          "ssim": 0.9810969617191202
+        },
+        {
+          "quality": 90,
+          "bytes": 21272,
+          "ssim": 0.9837474662761012
+        },
+        {
+          "quality": 95,
+          "bytes": 40624,
+          "ssim": 0.9874010888396239
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 6128,
+          "ssim": 0.9717285545452983
+        },
+        {
+          "quality": 50,
+          "bytes": 7004,
+          "ssim": 0.9740187646214284
+        },
+        {
+          "quality": 60,
+          "bytes": 7908,
+          "ssim": 0.9751105421561392
+        },
+        {
+          "quality": 70,
+          "bytes": 8846,
+          "ssim": 0.9765138033423765
+        },
+        {
+          "quality": 75,
+          "bytes": 9392,
+          "ssim": 0.9770769414328951
+        },
+        {
+          "quality": 80,
+          "bytes": 11776,
+          "ssim": 0.9794543008732683
+        },
+        {
+          "quality": 85,
+          "bytes": 14382,
+          "ssim": 0.9813254330092764
+        },
+        {
+          "quality": 90,
+          "bytes": 20876,
+          "ssim": 0.9841102994339046
+        },
+        {
+          "quality": 95,
+          "bytes": 39798,
+          "ssim": 0.9875702479015267
+        }
+      ],
+      "resamplerSSIM": 0.9966390976757583
+    },
+    {
+      "fixture": "landscape-1080p",
+      "character": "sky gradient + rock detail",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 12966,
+          "ssim": 0.9704984233837826
+        },
+        {
+          "quality": 50,
+          "bytes": 14432,
+          "ssim": 0.9741748592205394
+        },
+        {
+          "quality": 60,
+          "bytes": 16109,
+          "ssim": 0.9767314490585112
+        },
+        {
+          "quality": 70,
+          "bytes": 18881,
+          "ssim": 0.9797100821394507
+        },
+        {
+          "quality": 75,
+          "bytes": 20726,
+          "ssim": 0.9811122517244258
+        },
+        {
+          "quality": 80,
+          "bytes": 23787,
+          "ssim": 0.9826606627308221
+        },
+        {
+          "quality": 85,
+          "bytes": 28790,
+          "ssim": 0.9843812738138294
+        },
+        {
+          "quality": 90,
+          "bytes": 38833,
+          "ssim": 0.9866043237184844
+        },
+        {
+          "quality": 95,
+          "bytes": 63695,
+          "ssim": 0.9896959024267351
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 10132,
+          "ssim": 0.9707047288934759
+        },
+        {
+          "quality": 50,
+          "bytes": 11955,
+          "ssim": 0.9744743609558042
+        },
+        {
+          "quality": 60,
+          "bytes": 13783,
+          "ssim": 0.9770300156222081
+        },
+        {
+          "quality": 70,
+          "bytes": 16801,
+          "ssim": 0.9799242037897473
+        },
+        {
+          "quality": 75,
+          "bytes": 18842,
+          "ssim": 0.9813707458804369
+        },
+        {
+          "quality": 80,
+          "bytes": 22215,
+          "ssim": 0.9829518804914614
+        },
+        {
+          "quality": 85,
+          "bytes": 27395,
+          "ssim": 0.9845924779486891
+        },
+        {
+          "quality": 90,
+          "bytes": 37474,
+          "ssim": 0.9867846517312282
+        },
+        {
+          "quality": 95,
+          "bytes": 62200,
+          "ssim": 0.9898596664404337
+        }
+      ],
+      "resamplerSSIM": 0.9966390976757583
+    },
+    {
+      "fixture": "landscape-4k",
+      "character": "sky gradient + rock detail",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 6230,
+          "ssim": 0.9726509860241782
+        },
+        {
+          "quality": 50,
+          "bytes": 7116,
+          "ssim": 0.9743899629227893
+        },
+        {
+          "quality": 60,
+          "bytes": 8078,
+          "ssim": 0.9755814100388633
+        },
+        {
+          "quality": 70,
+          "bytes": 9016,
+          "ssim": 0.9771472327956247
+        },
+        {
+          "quality": 75,
+          "bytes": 9654,
+          "ssim": 0.9780020222303333
+        },
+        {
+          "quality": 80,
+          "bytes": 11634,
+          "ssim": 0.9799469330878119
+        },
+        {
+          "quality": 85,
+          "bytes": 14694,
+          "ssim": 0.9818674805882549
+        },
+        {
+          "quality": 90,
+          "bytes": 21286,
+          "ssim": 0.9846355789431279
+        },
+        {
+          "quality": 95,
+          "bytes": 35022,
+          "ssim": 0.9870405946475413
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 6242,
+          "ssim": 0.9734020052352219
+        },
+        {
+          "quality": 50,
+          "bytes": 7100,
+          "ssim": 0.9751944737289393
+        },
+        {
+          "quality": 60,
+          "bytes": 8006,
+          "ssim": 0.9764485308652173
+        },
+        {
+          "quality": 70,
+          "bytes": 8894,
+          "ssim": 0.9778351982773691
+        },
+        {
+          "quality": 75,
+          "bytes": 9496,
+          "ssim": 0.9786161872172026
+        },
+        {
+          "quality": 80,
+          "bytes": 11658,
+          "ssim": 0.9807347504634997
+        },
+        {
+          "quality": 85,
+          "bytes": 14586,
+          "ssim": 0.9827108139355974
+        },
+        {
+          "quality": 90,
+          "bytes": 21078,
+          "ssim": 0.9851062360645375
+        },
+        {
+          "quality": 95,
+          "bytes": 34326,
+          "ssim": 0.9876409473804028
+        }
+      ],
+      "resamplerSSIM": 0.9959011474380457
+    },
+    {
+      "fixture": "landscape-4k",
+      "character": "sky gradient + rock detail",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 12966,
+          "ssim": 0.9712909057939608
+        },
+        {
+          "quality": 50,
+          "bytes": 14444,
+          "ssim": 0.9748589380551465
+        },
+        {
+          "quality": 60,
+          "bytes": 16058,
+          "ssim": 0.9774183785547389
+        },
+        {
+          "quality": 70,
+          "bytes": 18838,
+          "ssim": 0.9802994697599139
+        },
+        {
+          "quality": 75,
+          "bytes": 20630,
+          "ssim": 0.9817214604498928
+        },
+        {
+          "quality": 80,
+          "bytes": 23605,
+          "ssim": 0.9833143498110876
+        },
+        {
+          "quality": 85,
+          "bytes": 28423,
+          "ssim": 0.9848861909217683
+        },
+        {
+          "quality": 90,
+          "bytes": 37985,
+          "ssim": 0.9869665814805537
+        },
+        {
+          "quality": 95,
+          "bytes": 62521,
+          "ssim": 0.989772039008784
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 10103,
+          "ssim": 0.9719795856942648
+        },
+        {
+          "quality": 50,
+          "bytes": 11942,
+          "ssim": 0.9756624479930578
+        },
+        {
+          "quality": 60,
+          "bytes": 13764,
+          "ssim": 0.9782237860478814
+        },
+        {
+          "quality": 70,
+          "bytes": 16754,
+          "ssim": 0.9810618422809925
+        },
+        {
+          "quality": 75,
+          "bytes": 18737,
+          "ssim": 0.9824878496961761
+        },
+        {
+          "quality": 80,
+          "bytes": 22024,
+          "ssim": 0.9839770498138738
+        },
+        {
+          "quality": 85,
+          "bytes": 26950,
+          "ssim": 0.9855493959856733
+        },
+        {
+          "quality": 90,
+          "bytes": 36503,
+          "ssim": 0.9876044793972264
+        },
+        {
+          "quality": 95,
+          "bytes": 60574,
+          "ssim": 0.9902178013196605
+        }
+      ],
+      "resamplerSSIM": 0.9959011474380457
+    },
+    {
+      "fixture": "detail-1080p",
+      "character": "high-frequency botanical detail",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 23026,
+          "ssim": 0.9573698891655812
+        },
+        {
+          "quality": 50,
+          "bytes": 26836,
+          "ssim": 0.9649679480269664
+        },
+        {
+          "quality": 60,
+          "bytes": 30146,
+          "ssim": 0.9700960445985016
+        },
+        {
+          "quality": 70,
+          "bytes": 33198,
+          "ssim": 0.9739291208248367
+        },
+        {
+          "quality": 75,
+          "bytes": 35074,
+          "ssim": 0.9767154061208686
+        },
+        {
+          "quality": 80,
+          "bytes": 42196,
+          "ssim": 0.9818048297901508
+        },
+        {
+          "quality": 85,
+          "bytes": 50034,
+          "ssim": 0.9869379172944687
+        },
+        {
+          "quality": 90,
+          "bytes": 62840,
+          "ssim": 0.9915951871796831
+        },
+        {
+          "quality": 95,
+          "bytes": 83042,
+          "ssim": 0.9954458506167269
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 22856,
+          "ssim": 0.9577811278661404
+        },
+        {
+          "quality": 50,
+          "bytes": 26638,
+          "ssim": 0.9651259987680509
+        },
+        {
+          "quality": 60,
+          "bytes": 29878,
+          "ssim": 0.9700213573446275
+        },
+        {
+          "quality": 70,
+          "bytes": 32858,
+          "ssim": 0.9742756545929151
+        },
+        {
+          "quality": 75,
+          "bytes": 34658,
+          "ssim": 0.9768042716296452
+        },
+        {
+          "quality": 80,
+          "bytes": 41710,
+          "ssim": 0.9818217738981923
+        },
+        {
+          "quality": 85,
+          "bytes": 49436,
+          "ssim": 0.987174982378785
+        },
+        {
+          "quality": 90,
+          "bytes": 61984,
+          "ssim": 0.9918549965381422
+        },
+        {
+          "quality": 95,
+          "bytes": 82022,
+          "ssim": 0.9957373844366754
+        }
+      ],
+      "resamplerSSIM": 0.9992868728131058
+    },
+    {
+      "fixture": "detail-1080p",
+      "character": "high-frequency botanical detail",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 29193,
+          "ssim": 0.8761371304872302
+        },
+        {
+          "quality": 50,
+          "bytes": 33115,
+          "ssim": 0.950609771665783
+        },
+        {
+          "quality": 60,
+          "bytes": 37371,
+          "ssim": 0.9586123271675893
+        },
+        {
+          "quality": 70,
+          "bytes": 43770,
+          "ssim": 0.8982545948974441
+        },
+        {
+          "quality": 75,
+          "bytes": 47991,
+          "ssim": 0.9705692699899044
+        },
+        {
+          "quality": 80,
+          "bytes": 54403,
+          "ssim": 0.971851140929694
+        },
+        {
+          "quality": 85,
+          "bytes": 63180,
+          "ssim": 0.9801864016922334
+        },
+        {
+          "quality": 90,
+          "bytes": 78293,
+          "ssim": 0.9883208217862831
+        },
+        {
+          "quality": 95,
+          "bytes": 110430,
+          "ssim": 0.9948032105653176
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 27639,
+          "ssim": 0.8754156595814159
+        },
+        {
+          "quality": 50,
+          "bytes": 31764,
+          "ssim": 0.9509508593417968
+        },
+        {
+          "quality": 60,
+          "bytes": 36281,
+          "ssim": 0.9586774457807355
+        },
+        {
+          "quality": 70,
+          "bytes": 42794,
+          "ssim": 0.8973675441632497
+        },
+        {
+          "quality": 75,
+          "bytes": 47027,
+          "ssim": 0.9708037292646814
+        },
+        {
+          "quality": 80,
+          "bytes": 53406,
+          "ssim": 0.9720938798829537
+        },
+        {
+          "quality": 85,
+          "bytes": 61779,
+          "ssim": 0.9801996495310973
+        },
+        {
+          "quality": 90,
+          "bytes": 75703,
+          "ssim": 0.9885558563439941
+        },
+        {
+          "quality": 95,
+          "bytes": 104775,
+          "ssim": 0.9949683756264158
+        }
+      ],
+      "resamplerSSIM": 0.9992868728131058
+    },
+    {
+      "fixture": "detail-4k",
+      "character": "high-frequency botanical detail",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 22982,
+          "ssim": 0.9562250729328091
+        },
+        {
+          "quality": 50,
+          "bytes": 26822,
+          "ssim": 0.9639768063097582
+        },
+        {
+          "quality": 60,
+          "bytes": 30086,
+          "ssim": 0.9687520411058942
+        },
+        {
+          "quality": 70,
+          "bytes": 33148,
+          "ssim": 0.9728918388149882
+        },
+        {
+          "quality": 75,
+          "bytes": 34976,
+          "ssim": 0.9753298677821889
+        },
+        {
+          "quality": 80,
+          "bytes": 41666,
+          "ssim": 0.979690043480438
+        },
+        {
+          "quality": 85,
+          "bytes": 50050,
+          "ssim": 0.985516563858257
+        },
+        {
+          "quality": 90,
+          "bytes": 62764,
+          "ssim": 0.9898154004095344
+        },
+        {
+          "quality": 95,
+          "bytes": 82852,
+          "ssim": 0.9938434627241232
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 22698,
+          "ssim": 0.9561919249555207
+        },
+        {
+          "quality": 50,
+          "bytes": 26516,
+          "ssim": 0.9641219491974232
+        },
+        {
+          "quality": 60,
+          "bytes": 29744,
+          "ssim": 0.9685302807009644
+        },
+        {
+          "quality": 70,
+          "bytes": 32856,
+          "ssim": 0.9729414559978311
+        },
+        {
+          "quality": 75,
+          "bytes": 34632,
+          "ssim": 0.9759435902104534
+        },
+        {
+          "quality": 80,
+          "bytes": 41312,
+          "ssim": 0.9798460006664377
+        },
+        {
+          "quality": 85,
+          "bytes": 49592,
+          "ssim": 0.9860043455864407
+        },
+        {
+          "quality": 90,
+          "bytes": 62348,
+          "ssim": 0.990276732544855
+        },
+        {
+          "quality": 95,
+          "bytes": 82172,
+          "ssim": 0.994366169305684
+        }
+      ],
+      "resamplerSSIM": 0.9984319797990228
+    },
+    {
+      "fixture": "detail-4k",
+      "character": "high-frequency botanical detail",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 29186,
+          "ssim": 0.8825658193856254
+        },
+        {
+          "quality": 50,
+          "bytes": 33075,
+          "ssim": 0.949674771804019
+        },
+        {
+          "quality": 60,
+          "bytes": 37346,
+          "ssim": 0.9574446178347132
+        },
+        {
+          "quality": 70,
+          "bytes": 43632,
+          "ssim": 0.9042421578907448
+        },
+        {
+          "quality": 75,
+          "bytes": 47853,
+          "ssim": 0.9693967430522242
+        },
+        {
+          "quality": 80,
+          "bytes": 54279,
+          "ssim": 0.9641907898228367
+        },
+        {
+          "quality": 85,
+          "bytes": 63042,
+          "ssim": 0.9751867661037086
+        },
+        {
+          "quality": 90,
+          "bytes": 78120,
+          "ssim": 0.9862908908995716
+        },
+        {
+          "quality": 95,
+          "bytes": 111995,
+          "ssim": 0.993671936866169
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 27459,
+          "ssim": 0.8803821125408714
+        },
+        {
+          "quality": 50,
+          "bytes": 31607,
+          "ssim": 0.9507504080090251
+        },
+        {
+          "quality": 60,
+          "bytes": 36083,
+          "ssim": 0.9582215262004085
+        },
+        {
+          "quality": 70,
+          "bytes": 42458,
+          "ssim": 0.9015221057011692
+        },
+        {
+          "quality": 75,
+          "bytes": 46645,
+          "ssim": 0.9701936984943746
+        },
+        {
+          "quality": 80,
+          "bytes": 53009,
+          "ssim": 0.9663807565816412
+        },
+        {
+          "quality": 85,
+          "bytes": 61486,
+          "ssim": 0.9762415720432698
+        },
+        {
+          "quality": 90,
+          "bytes": 75507,
+          "ssim": 0.9867569769952625
+        },
+        {
+          "quality": 95,
+          "bytes": 106392,
+          "ssim": 0.9937030363173657
+        }
+      ],
+      "resamplerSSIM": 0.9984319797990228
+    },
+    {
+      "fixture": "gradient-1080p",
+      "character": "smooth synthetic gradients",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 29740,
+          "ssim": 0.9387437397915072
+        },
+        {
+          "quality": 50,
+          "bytes": 34076,
+          "ssim": 0.9464227661071484
+        },
+        {
+          "quality": 60,
+          "bytes": 37874,
+          "ssim": 0.9541674945979777
+        },
+        {
+          "quality": 70,
+          "bytes": 42650,
+          "ssim": 0.9613663953591454
+        },
+        {
+          "quality": 75,
+          "bytes": 44798,
+          "ssim": 0.9630167730324704
+        },
+        {
+          "quality": 80,
+          "bytes": 53580,
+          "ssim": 0.9696424428660506
+        },
+        {
+          "quality": 85,
+          "bytes": 63170,
+          "ssim": 0.9755965129912773
+        },
+        {
+          "quality": 90,
+          "bytes": 78366,
+          "ssim": 0.980295324613242
+        },
+        {
+          "quality": 95,
+          "bytes": 104194,
+          "ssim": 0.9840898450332483
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 29430,
+          "ssim": 0.9414928993755399
+        },
+        {
+          "quality": 50,
+          "bytes": 33750,
+          "ssim": 0.9489942998774258
+        },
+        {
+          "quality": 60,
+          "bytes": 37162,
+          "ssim": 0.9563223176984513
+        },
+        {
+          "quality": 70,
+          "bytes": 41826,
+          "ssim": 0.9618477242922006
+        },
+        {
+          "quality": 75,
+          "bytes": 44204,
+          "ssim": 0.9667219135555962
+        },
+        {
+          "quality": 80,
+          "bytes": 52932,
+          "ssim": 0.9728732571509793
+        },
+        {
+          "quality": 85,
+          "bytes": 62790,
+          "ssim": 0.9776282217254607
+        },
+        {
+          "quality": 90,
+          "bytes": 79470,
+          "ssim": 0.9826307558271007
+        },
+        {
+          "quality": 95,
+          "bytes": 103602,
+          "ssim": 0.9863037373776494
+        }
+      ],
+      "resamplerSSIM": 0.9972772846173181
+    },
+    {
+      "fixture": "gradient-1080p",
+      "character": "smooth synthetic gradients",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 38607,
+          "ssim": 0.9141616404088464
+        },
+        {
+          "quality": 50,
+          "bytes": 44649,
+          "ssim": 0.9246529859649243
+        },
+        {
+          "quality": 60,
+          "bytes": 51325,
+          "ssim": 0.9345593575079517
+        },
+        {
+          "quality": 70,
+          "bytes": 61415,
+          "ssim": 0.9456952152674056
+        },
+        {
+          "quality": 75,
+          "bytes": 67769,
+          "ssim": 0.9517659449568152
+        },
+        {
+          "quality": 80,
+          "bytes": 77658,
+          "ssim": 0.9589164868746776
+        },
+        {
+          "quality": 85,
+          "bytes": 90965,
+          "ssim": 0.9662032169759182
+        },
+        {
+          "quality": 90,
+          "bytes": 114166,
+          "ssim": 0.9747100996058073
+        },
+        {
+          "quality": 95,
+          "bytes": 160908,
+          "ssim": 0.9827514782802302
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 36644,
+          "ssim": 0.9165392760372005
+        },
+        {
+          "quality": 50,
+          "bytes": 42681,
+          "ssim": 0.9269811385009572
+        },
+        {
+          "quality": 60,
+          "bytes": 49134,
+          "ssim": 0.9368377178840213
+        },
+        {
+          "quality": 70,
+          "bytes": 58931,
+          "ssim": 0.9480375695712427
+        },
+        {
+          "quality": 75,
+          "bytes": 65039,
+          "ssim": 0.9540530680234195
+        },
+        {
+          "quality": 80,
+          "bytes": 74343,
+          "ssim": 0.9613296480702705
+        },
+        {
+          "quality": 85,
+          "bytes": 86832,
+          "ssim": 0.9685517621286824
+        },
+        {
+          "quality": 90,
+          "bytes": 107985,
+          "ssim": 0.9767828115160616
+        },
+        {
+          "quality": 95,
+          "bytes": 151106,
+          "ssim": 0.9848139018225831
+        }
+      ],
+      "resamplerSSIM": 0.9972772846173181
+    },
+    {
+      "fixture": "gradient-4k",
+      "character": "smooth synthetic gradients",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 30048,
+          "ssim": 0.940717932045737
+        },
+        {
+          "quality": 50,
+          "bytes": 34316,
+          "ssim": 0.9479158617588367
+        },
+        {
+          "quality": 60,
+          "bytes": 38092,
+          "ssim": 0.9554184942190987
+        },
+        {
+          "quality": 70,
+          "bytes": 42798,
+          "ssim": 0.9620579078164586
+        },
+        {
+          "quality": 75,
+          "bytes": 45604,
+          "ssim": 0.9659986858500598
+        },
+        {
+          "quality": 80,
+          "bytes": 53890,
+          "ssim": 0.9716038590544938
+        },
+        {
+          "quality": 85,
+          "bytes": 63530,
+          "ssim": 0.9763629261578405
+        },
+        {
+          "quality": 90,
+          "bytes": 82432,
+          "ssim": 0.9817348387312665
+        },
+        {
+          "quality": 95,
+          "bytes": 104042,
+          "ssim": 0.9847044768000951
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 29776,
+          "ssim": 0.9412778155631256
+        },
+        {
+          "quality": 50,
+          "bytes": 33946,
+          "ssim": 0.9480680944658791
+        },
+        {
+          "quality": 60,
+          "bytes": 37824,
+          "ssim": 0.9550366928895903
+        },
+        {
+          "quality": 70,
+          "bytes": 42376,
+          "ssim": 0.9618423728699739
+        },
+        {
+          "quality": 75,
+          "bytes": 45448,
+          "ssim": 0.9660288865612406
+        },
+        {
+          "quality": 80,
+          "bytes": 53516,
+          "ssim": 0.9717318983869123
+        },
+        {
+          "quality": 85,
+          "bytes": 63580,
+          "ssim": 0.9763564489575526
+        },
+        {
+          "quality": 90,
+          "bytes": 81900,
+          "ssim": 0.9815654075953683
+        },
+        {
+          "quality": 95,
+          "bytes": 103086,
+          "ssim": 0.9846337123666864
+        }
+      ],
+      "resamplerSSIM": 0.9982132843270594
+    },
+    {
+      "fixture": "gradient-4k",
+      "character": "smooth synthetic gradients",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 38658,
+          "ssim": 0.915743483603461
+        },
+        {
+          "quality": 50,
+          "bytes": 44758,
+          "ssim": 0.9262147756282172
+        },
+        {
+          "quality": 60,
+          "bytes": 51414,
+          "ssim": 0.9356344041154558
+        },
+        {
+          "quality": 70,
+          "bytes": 61589,
+          "ssim": 0.9468060916560717
+        },
+        {
+          "quality": 75,
+          "bytes": 67987,
+          "ssim": 0.9528141271384438
+        },
+        {
+          "quality": 80,
+          "bytes": 78007,
+          "ssim": 0.9599983652462951
+        },
+        {
+          "quality": 85,
+          "bytes": 91322,
+          "ssim": 0.9671360434971586
+        },
+        {
+          "quality": 90,
+          "bytes": 114559,
+          "ssim": 0.9753907127563861
+        },
+        {
+          "quality": 95,
+          "bytes": 161564,
+          "ssim": 0.9833564513320883
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 36770,
+          "ssim": 0.9166092843499504
+        },
+        {
+          "quality": 50,
+          "bytes": 42818,
+          "ssim": 0.9268377926502406
+        },
+        {
+          "quality": 60,
+          "bytes": 49373,
+          "ssim": 0.9362354772461586
+        },
+        {
+          "quality": 70,
+          "bytes": 59291,
+          "ssim": 0.9472986778293546
+        },
+        {
+          "quality": 75,
+          "bytes": 65484,
+          "ssim": 0.9531460779970535
+        },
+        {
+          "quality": 80,
+          "bytes": 74960,
+          "ssim": 0.9602064309344975
+        },
+        {
+          "quality": 85,
+          "bytes": 87620,
+          "ssim": 0.9673759990971621
+        },
+        {
+          "quality": 90,
+          "bytes": 109119,
+          "ssim": 0.9754001986875792
+        },
+        {
+          "quality": 95,
+          "bytes": 152582,
+          "ssim": 0.9833439184050776
+        }
+      ],
+      "resamplerSSIM": 0.9982132843270594
+    },
+    {
+      "fixture": "chroma-1080p",
+      "character": "saturated, noisy",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 79118,
+          "ssim": 0.9377853156498839
+        },
+        {
+          "quality": 50,
+          "bytes": 89084,
+          "ssim": 0.9479402595393923
+        },
+        {
+          "quality": 60,
+          "bytes": 97990,
+          "ssim": 0.9558356723365578
+        },
+        {
+          "quality": 70,
+          "bytes": 108578,
+          "ssim": 0.9632663281050265
+        },
+        {
+          "quality": 75,
+          "bytes": 115184,
+          "ssim": 0.9669022589640899
+        },
+        {
+          "quality": 80,
+          "bytes": 133024,
+          "ssim": 0.9744207558948694
+        },
+        {
+          "quality": 85,
+          "bytes": 155220,
+          "ssim": 0.980233955021373
+        },
+        {
+          "quality": 90,
+          "bytes": 181828,
+          "ssim": 0.9845430415333309
+        },
+        {
+          "quality": 95,
+          "bytes": 227298,
+          "ssim": 0.9879072343026608
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 76644,
+          "ssim": 0.93976586026495
+        },
+        {
+          "quality": 50,
+          "bytes": 87574,
+          "ssim": 0.9516048864393262
+        },
+        {
+          "quality": 60,
+          "bytes": 96446,
+          "ssim": 0.959230522287069
+        },
+        {
+          "quality": 70,
+          "bytes": 106954,
+          "ssim": 0.966707854829038
+        },
+        {
+          "quality": 75,
+          "bytes": 111728,
+          "ssim": 0.9693104591703661
+        },
+        {
+          "quality": 80,
+          "bytes": 130674,
+          "ssim": 0.9775261136651741
+        },
+        {
+          "quality": 85,
+          "bytes": 152394,
+          "ssim": 0.9835303449266651
+        },
+        {
+          "quality": 90,
+          "bytes": 180632,
+          "ssim": 0.9880130147598667
+        },
+        {
+          "quality": 95,
+          "bytes": 222742,
+          "ssim": 0.9911528034687724
+        }
+      ],
+      "resamplerSSIM": 0.9984928546727713
+    },
+    {
+      "fixture": "chroma-1080p",
+      "character": "saturated, noisy",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 70027,
+          "ssim": 0.8844678902022843
+        },
+        {
+          "quality": 50,
+          "bytes": 81149,
+          "ssim": 0.9050679481938233
+        },
+        {
+          "quality": 60,
+          "bytes": 93516,
+          "ssim": 0.9231609036918212
+        },
+        {
+          "quality": 70,
+          "bytes": 111717,
+          "ssim": 0.9420564853302639
+        },
+        {
+          "quality": 75,
+          "bytes": 123277,
+          "ssim": 0.9515417640666564
+        },
+        {
+          "quality": 80,
+          "bytes": 140041,
+          "ssim": 0.961719654545286
+        },
+        {
+          "quality": 85,
+          "bytes": 162126,
+          "ssim": 0.971166274161648
+        },
+        {
+          "quality": 90,
+          "bytes": 197628,
+          "ssim": 0.9798288448648756
+        },
+        {
+          "quality": 95,
+          "bytes": 266850,
+          "ssim": 0.9867500531156763
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 66516,
+          "ssim": 0.8881295540467025
+        },
+        {
+          "quality": 50,
+          "bytes": 77264,
+          "ssim": 0.908594100238481
+        },
+        {
+          "quality": 60,
+          "bytes": 88845,
+          "ssim": 0.9264024115072764
+        },
+        {
+          "quality": 70,
+          "bytes": 105821,
+          "ssim": 0.9452891996869024
+        },
+        {
+          "quality": 75,
+          "bytes": 116607,
+          "ssim": 0.9547387244157486
+        },
+        {
+          "quality": 80,
+          "bytes": 132635,
+          "ssim": 0.9650321631050709
+        },
+        {
+          "quality": 85,
+          "bytes": 153414,
+          "ssim": 0.9744089225467183
+        },
+        {
+          "quality": 90,
+          "bytes": 186533,
+          "ssim": 0.9830149049919513
+        },
+        {
+          "quality": 95,
+          "bytes": 248363,
+          "ssim": 0.9900200633350793
+        }
+      ],
+      "resamplerSSIM": 0.9984928546727713
+    },
+    {
+      "fixture": "chroma-4k",
+      "character": "saturated, noisy",
+      "format": "webp",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 79516,
+          "ssim": 0.9371148886880137
+        },
+        {
+          "quality": 50,
+          "bytes": 89466,
+          "ssim": 0.9474527058949591
+        },
+        {
+          "quality": 60,
+          "bytes": 97650,
+          "ssim": 0.9543647447845804
+        },
+        {
+          "quality": 70,
+          "bytes": 108968,
+          "ssim": 0.9625495726847989
+        },
+        {
+          "quality": 75,
+          "bytes": 115594,
+          "ssim": 0.9662615387097314
+        },
+        {
+          "quality": 80,
+          "bytes": 133244,
+          "ssim": 0.9736830034157076
+        },
+        {
+          "quality": 85,
+          "bytes": 155378,
+          "ssim": 0.9796448143175666
+        },
+        {
+          "quality": 90,
+          "bytes": 182262,
+          "ssim": 0.9838656866762462
+        },
+        {
+          "quality": 95,
+          "bytes": 227230,
+          "ssim": 0.9872734138587546
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 78672,
+          "ssim": 0.9365632091618322
+        },
+        {
+          "quality": 50,
+          "bytes": 88860,
+          "ssim": 0.9471050837412327
+        },
+        {
+          "quality": 60,
+          "bytes": 96978,
+          "ssim": 0.9543237432668326
+        },
+        {
+          "quality": 70,
+          "bytes": 108252,
+          "ssim": 0.962373293275109
+        },
+        {
+          "quality": 75,
+          "bytes": 114768,
+          "ssim": 0.9659641164614791
+        },
+        {
+          "quality": 80,
+          "bytes": 132670,
+          "ssim": 0.9734323910381629
+        },
+        {
+          "quality": 85,
+          "bytes": 154626,
+          "ssim": 0.9794051574464332
+        },
+        {
+          "quality": 90,
+          "bytes": 181356,
+          "ssim": 0.9837916611737326
+        },
+        {
+          "quality": 95,
+          "bytes": 226238,
+          "ssim": 0.9870810706560706
+        }
+      ],
+      "resamplerSSIM": 0.9991450620411996
+    },
+    {
+      "fixture": "chroma-4k",
+      "character": "saturated, noisy",
+      "format": "jpeg",
+      "bun": [
+        {
+          "quality": 40,
+          "bytes": 70149,
+          "ssim": 0.8838311345510689
+        },
+        {
+          "quality": 50,
+          "bytes": 81396,
+          "ssim": 0.9046612769226147
+        },
+        {
+          "quality": 60,
+          "bytes": 93793,
+          "ssim": 0.9226779025866901
+        },
+        {
+          "quality": 70,
+          "bytes": 112237,
+          "ssim": 0.9416072847616644
+        },
+        {
+          "quality": 75,
+          "bytes": 123720,
+          "ssim": 0.9509062408465935
+        },
+        {
+          "quality": 80,
+          "bytes": 140474,
+          "ssim": 0.961238239831738
+        },
+        {
+          "quality": 85,
+          "bytes": 162652,
+          "ssim": 0.9706670915106806
+        },
+        {
+          "quality": 90,
+          "bytes": 198198,
+          "ssim": 0.9793163131277124
+        },
+        {
+          "quality": 95,
+          "bytes": 267115,
+          "ssim": 0.9861811810051915
+        }
+      ],
+      "sharp": [
+        {
+          "quality": 40,
+          "bytes": 66539,
+          "ssim": 0.8845356817750673
+        },
+        {
+          "quality": 50,
+          "bytes": 77458,
+          "ssim": 0.9050860865265268
+        },
+        {
+          "quality": 60,
+          "bytes": 89210,
+          "ssim": 0.9228580374208744
+        },
+        {
+          "quality": 70,
+          "bytes": 106614,
+          "ssim": 0.9416468172594832
+        },
+        {
+          "quality": 75,
+          "bytes": 117529,
+          "ssim": 0.9508668878668826
+        },
+        {
+          "quality": 80,
+          "bytes": 133638,
+          "ssim": 0.9610846710683693
+        },
+        {
+          "quality": 85,
+          "bytes": 154815,
+          "ssim": 0.9704132348291767
+        },
+        {
+          "quality": 90,
+          "bytes": 188374,
+          "ssim": 0.9790979973871771
+        },
+        {
+          "quality": 95,
+          "bytes": 250542,
+          "ssim": 0.9859987017214378
+        }
+      ],
+      "resamplerSSIM": 0.9991450620411996
+    }
+  ],
+  "summary": [
+    {
+      "fixture": "landscape-1080p",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 6202,
+          "sharpBytes": 6128,
+          "delta": 0.01207571801566587
+        },
+        "0.98": {
+          "bunBytes": 12902,
+          "sharpBytes": 12536,
+          "delta": 0.029203407312408114
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "landscape-4k",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 6230,
+          "sharpBytes": 6242,
+          "delta": -0.001922460749759658
+        },
+        "0.98": {
+          "bunBytes": 11719,
+          "sharpBytes": 10908,
+          "delta": 0.07428974497106222
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "detail-1080p",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 24345,
+          "sharpBytes": 23999,
+          "delta": 0.014430781675146998
+        },
+        "0.98": {
+          "bunBytes": 39670,
+          "sharpBytes": 39150,
+          "delta": 0.013303805346277509
+        },
+        "0.99": {
+          "bunBytes": 58454,
+          "sharpBytes": 57010,
+          "delta": 0.02531716252569316
+        }
+      }
+    },
+    {
+      "fixture": "detail-4k",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 24852,
+          "sharpBytes": 24531,
+          "delta": 0.01306716406709496
+        },
+        "0.98": {
+          "bunBytes": 42112,
+          "sharpBytes": 41519,
+          "delta": 0.014281476253428238
+        },
+        "0.99": {
+          "bunBytes": 63685,
+          "sharpBytes": 61522,
+          "delta": 0.03515563536018296
+        }
+      }
+    },
+    {
+      "fixture": "gradient-1080p",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 41743,
+          "sharpBytes": 40266,
+          "delta": 0.0366845292031468
+        },
+        "0.98": {
+          "bunBytes": 77411,
+          "sharpBytes": 70698,
+          "delta": 0.09494823088727244
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "gradient-4k",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 41339,
+          "sharpBytes": 41144,
+          "delta": 0.004754960383301254
+        },
+        "0.98": {
+          "bunBytes": 76328,
+          "sharpBytes": 76394,
+          "delta": -0.0008739209475188137
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "chroma-1080p",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 103924,
+          "sharpBytes": 97527,
+          "delta": 0.06558596150743345
+        },
+        "0.98": {
+          "bunBytes": 154327,
+          "sharpBytes": 139623,
+          "delta": 0.10530884684439301
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "chroma-4k",
+      "format": "webp",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 105442,
+          "sharpBytes": 104928,
+          "delta": 0.004902601962740283
+        },
+        "0.98": {
+          "bunBytes": 157640,
+          "sharpBytes": 158251,
+          "delta": -0.0038578195224575618
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "landscape-1080p",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 12966,
+          "sharpBytes": 10132,
+          "delta": 0.2797078562968811
+        },
+        "0.98": {
+          "bunBytes": 19262,
+          "sharpBytes": 16908,
+          "delta": 0.13925609777446302
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "landscape-4k",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 12966,
+          "sharpBytes": 10103,
+          "delta": 0.28338117390873996
+        },
+        "0.98": {
+          "bunBytes": 18549,
+          "sharpBytes": 15635,
+          "delta": 0.18635571389893402
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "detail-1080p",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 38604,
+          "sharpBytes": 37453,
+          "delta": 0.03071847235609826
+        },
+        "0.98": {
+          "bunBytes": 62984,
+          "sharpBytes": 61573,
+          "delta": 0.022915182733181716
+        },
+        "0.99": {
+          "bunBytes": 86618,
+          "sharpBytes": 82250,
+          "delta": 0.05309961953498932
+        }
+      }
+    },
+    {
+      "fixture": "detail-4k",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 43760,
+          "sharpBytes": 39772,
+          "delta": 0.1002624817378055
+        },
+        "0.98": {
+          "bunBytes": 69578,
+          "sharpBytes": 66497,
+          "delta": 0.04632304950526933
+        },
+        "0.99": {
+          "bunBytes": 95143,
+          "sharpBytes": 89927,
+          "delta": 0.05800276844625296
+        }
+      }
+    },
+    {
+      "fixture": "gradient-1080p",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 79637,
+          "sharpBytes": 72643,
+          "delta": 0.09627682265481763
+        },
+        "0.98": {
+          "bunBytes": 144915,
+          "sharpBytes": 125259,
+          "delta": 0.15691982456381814
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "gradient-4k",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 78010,
+          "sharpBytes": 74683,
+          "delta": 0.04454978984240143
+        },
+        "0.98": {
+          "bunBytes": 141758,
+          "sharpBytes": 134286,
+          "delta": 0.055640341748924405
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "chroma-1080p",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 137209,
+          "sharpBytes": 124799,
+          "delta": 0.0994330375605963
+        },
+        "0.98": {
+          "bunBytes": 199340,
+          "sharpBytes": 174931,
+          "delta": 0.1395369044703667
+        },
+        "0.99": null
+      }
+    },
+    {
+      "fixture": "chroma-4k",
+      "format": "jpeg",
+      "deltas": {
+        "0.96": {
+          "bunBytes": 138466,
+          "sharpBytes": 131928,
+          "delta": 0.049558636445731
+        },
+        "0.98": {
+          "bunBytes": 205062,
+          "sharpBytes": 196500,
+          "delta": 0.04356999720163124
+        },
+        "0.99": null
+      }
+    }
+  ]
+}

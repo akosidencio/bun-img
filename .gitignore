@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Bun
+.bun/
+bun.lockb.bak
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Benchmark artifacts
+# Fixtures are generated from local system images by `bun prepare-fixtures.ts`
+# and are large, machine-specific, and not reproducible on another host — the
+# manifest records how to rebuild them.
+benchmarks/fixtures/
+benchmarks/node_modules/
+
+# `results/` is whatever the scripts wrote on the machine you happen to be on.
+# `results-linux/` is committed on purpose: the performance claims in README.md
+# and docs/phase0-findings.md are linux/amd64 and have to be checkable against
+# the raw numbers rather than taken on trust.
+benchmarks/results/
+benchmarks/*.tmp.json
+
+# Image cache (Phase 3)
+.cache/
+.cache/images/
+
+# Test scratch
+.tmp-*
+*.tmp
+
+# Coverage
+coverage/
+*.lcov
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
