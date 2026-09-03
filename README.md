@@ -121,6 +121,10 @@ Two spellings, one meaning, one cache key:
 Operations: `w`, `h`, `fit` (`inside` / `fill`), `q`, `f`
 (`auto` / `jpeg` / `png` / `webp` / `avif` / `heic`), `enlarge`, `orient`.
 
+Absolute `http(s)` sources take the query form — a URL's `//` cannot survive
+being encoded as path segments. `imageUrl` and `srcset` switch automatically, so
+a remote source is passed the same way as a local one.
+
 ```ts
 import { imageUrl, srcset } from "bun-img/url";
 
@@ -129,6 +133,55 @@ srcset("/hero.jpg", {
   sizes: "(max-width: 768px) 100vw, 1280px",
 });
 ```
+
+## Remote sources
+
+Images can come from S3, R2, Spaces, a CDN, or any HTTPS origin. Remote fetching
+is **off until you list patterns** — there is no wildcard and no way to say "any
+host", because an image endpoint that will fetch an arbitrary URL is an SSRF
+proxy:
+
+```ts
+createImageServer({
+  remote: {
+    patterns: [
+      { protocol: "https", hostname: "my-bucket.s3.ap-southeast-1.amazonaws.com" },
+      { protocol: "https", hostname: "*.cloudfront.net", pathname: "/img/**" },
+    ],
+  },
+  cache: { memory: { maxBytes: 256 * 1024 * 1024 } },
+});
+```
+
+`hostname` is exact or one leading `*.` wildcard, which never matches the bare
+apex. `pathname` is a glob where `*` stays inside a segment and `**` crosses
+them. Omitting `port` allows only the protocol default, so an allowlisted host
+cannot also be reached on `:8080`.
+
+Every URL — and every redirect hop, revalidated from scratch — passes protocol
+and credential checks, the allowlist, a pre-DNS hostname check, and
+classification of *every* address DNS returns. Bodies are capped mid-stream, so
+an origin that lies about `Content-Length` is cut off rather than believed.
+
+**Presigned URLs work**, and the signature is not part of the cache identity:
+AWS SigV4, GCS V4, CloudFront and Azure SAS parameters are recognized and
+stripped, so a URL reissued every 15 minutes keeps hitting the same cache entry.
+Any other query parameter is preserved — `?v=2` selects content and is part of
+the identity.
+
+With a cache configured, a repeat request is answered after a `HEAD`, not a full
+download. Set `remote: { identify: false }` to skip the `HEAD` for an origin that
+mishandles it.
+
+Remote sources need the query form, and the builders emit it for you:
+
+```ts
+imageUrl("https://my-bucket.s3.ap-southeast-1.amazonaws.com/cat.png", { width: 640 });
+// -> /_image?url=https%3A%2F%2Fmy-bucket.s3.…%2Fcat.png&w=640
+```
+
+Private buckets that need signing by the server — an `s3://` source with
+credentials — are on the roadmap; today, presign the URL upstream and pass it in.
 
 ## Entrypoints
 
@@ -187,7 +240,7 @@ Full capability matrix: [docs/capability-matrix.md](./docs/capability-matrix.md)
 | **SvelteKit** | an `enhanced:img`-compatible image service |
 | **React & Svelte components** | framework-neutral `<Image />` with `srcset`, lazy loading and blur placeholders |
 | **Hono & Elysia** | drop-in middleware for the endpoint |
-| **S3 / R2 sources** | fetch originals from object storage |
+| **Signed object storage** | server-side credentials for private S3 / R2 buckets — public and presigned URLs already work, see [Remote sources](#remote-sources) |
 | **S3 / R2 / Redis cache tiers** | shared caching for multi-instance deployments |
 | **Signed URLs** | HMAC-signed transforms for publicly exposed endpoints |
 | **Presets** | named transforms, e.g. `/_image/p_avatar/users/42.jpg` |

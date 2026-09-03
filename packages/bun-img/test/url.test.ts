@@ -282,3 +282,52 @@ describe("srcset", () => {
     await expectCode(() => srcset("/a.jpg", { widths: [1.5] }), "INVALID_REQUEST");
   });
 });
+
+describe("remote sources", () => {
+  const REMOTE = "https://bucket.s3.ap-southeast-1.amazonaws.com/photos/cat.png";
+
+  test("imageUrl emits the query form, which is the only one that survives", () => {
+    // The operation-path form encodes the source as path segments, and `//`
+    // does not survive that — it used to come back as `https:/bucket…`, which
+    // no resolver claims, so the request 403'd.
+    const built = imageUrl(REMOTE, { width: 640 });
+    expect(parseImageRequest(built).source).toBe(REMOTE);
+    expect(parseImageRequest(built).transform.width).toBe(640);
+  });
+
+  test("srcset carries remote sources through every candidate", () => {
+    const set = srcset(REMOTE, { widths: [320, 640] });
+    expect(parseImageRequest(set.src).source).toBe(REMOTE);
+    for (const entry of set.srcset.split(", ")) {
+      expect(parseImageRequest(entry.split(" ")[0]!).source).toBe(REMOTE);
+    }
+  });
+
+  test("a presigned URL round-trips with its signature intact", () => {
+    // The signature has to reach the origin untouched, however it is carried.
+    const presigned = `${REMOTE}?X-Amz-Signature=deadbeef&X-Amz-Expires=900`;
+    expect(parseImageRequest(imageUrl(presigned, { width: 640 })).source).toBe(presigned);
+  });
+
+  test("http is carried too, not just https", () => {
+    expect(parseImageRequest(imageUrl("http://example.com/a.png")).source).toBe(
+      "http://example.com/a.png",
+    );
+  });
+
+  test("a local source still gets the operation-path form", () => {
+    expect(imageUrl("/hero.jpg", { width: 640 })).toBe("/_image/w_640/hero.jpg");
+  });
+
+  test("a path that merely mentions a scheme is not treated as remote", () => {
+    // Only a *leading* absolute URL switches protocol; this is a local path
+    // that happens to contain a colon, and stays in the operation-path form.
+    expect(imageUrl("/img/https://not-a-url.png")).toBe("/_image/img/https%3A//not-a-url.png");
+  });
+
+  test("basePath is honoured in the query form", () => {
+    const built = imageUrl(REMOTE, { width: 320 }, { basePath: "/cdn" });
+    expect(built.startsWith("/cdn?")).toBe(true);
+    expect(parseImageRequest(built, { basePath: "/cdn" }).source).toBe(REMOTE);
+  });
+});

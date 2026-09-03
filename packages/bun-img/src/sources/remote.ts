@@ -15,6 +15,11 @@
  * step 2 on redirects is the classic bypass: an allowlisted host 302s to
  * `http://169.254.169.254/`.
  *
+ * `identify` runs the same chain with a `HEAD`, so a warm cache is served
+ * without downloading the source at all. It walks redirects through the very
+ * same loop — a cheaper path that skipped a hop check would be a hole in
+ * exactly the defence above.
+ *
  * Residual risk, stated plainly: between step 4 and step 5 the name could be
  * re-resolved to a different address (DNS rebinding). Bun's `fetch` cannot be
  * pinned to a validated IP, and connecting by IP would break TLS verification.
@@ -25,6 +30,7 @@
 import { ImageError } from "../errors.ts";
 import { classifyIp, hostnameVerdict, isIpLiteral } from "./ip.ts";
 import { matchesAnyPattern, type RemotePattern } from "./patterns.ts";
+import type { SourceIdentity } from "../types.ts";
 import type { ResolveContext, ResolvedSource, SourceResolver } from "./types.ts";
 
 /** Injectable so tests can drive rebinding and hostile-origin scenarios. */
@@ -40,8 +46,90 @@ export interface RemoteSourceOptions {
   maxSourceBytes?: number;
   /** Sent on every upstream request. */
   userAgent?: string;
+  /**
+   * Answer `identify()` with a `HEAD`, so a warm cache can be served without
+   * downloading the source. Default `true`.
+   *
+   * The trade is one extra round trip on a cache *miss* against a whole body
+   * saved on every cache *hit*. Turn it off for an origin that mishandles
+   * `HEAD`, or one whose images are small enough that the round trip costs more
+   * than the bytes. The engine only asks when a result cache is configured.
+   */
+  identify?: boolean;
   lookup?: LookupFn;
   fetch?: FetchFn;
+}
+
+/**
+ * Query parameters that authenticate a URL rather than name the object.
+ *
+ * A presigned URL's signature rotates on every issue, so leaving it in the
+ * identity gives the same object a new cache key every few minutes — the cache
+ * never hits and every request re-downloads and re-encodes.
+ *
+ * Stripping is deliberately narrow. Dropping a parameter that *does* select
+ * content would collapse two different images onto one cache entry and serve
+ * the wrong bytes, which is far worse than a cache miss. So each scheme is
+ * gated on a marker parameter that no ordinary URL carries, and only that
+ * scheme's own parameters are removed; everything else — `?v=2`, `?page=3` —
+ * stays part of the identity.
+ */
+const SIGNING_SCHEMES: ReadonlyArray<{
+  /** All must be present, lowercased, before anything is stripped. */
+  markers: readonly string[];
+  /** Exact names to drop, lowercased. */
+  params?: readonly string[];
+  /** Name prefixes to drop, lowercased. */
+  prefixes?: readonly string[];
+}> = [
+  // AWS SigV4 presigned — S3, and everything that speaks it: R2, DigitalOcean
+  // Spaces, MinIO, Wasabi, Backblaze B2's S3 API.
+  { markers: ["x-amz-signature"], prefixes: ["x-amz-"] },
+  // Google Cloud Storage V4 signed URLs.
+  { markers: ["x-goog-signature"], prefixes: ["x-goog-"] },
+  // CloudFront signed URLs. `Signature` and `Expires` are generic enough to
+  // appear on an ordinary URL, so both markers are required together.
+  {
+    markers: ["key-pair-id", "signature"],
+    params: ["expires", "signature", "key-pair-id", "policy"],
+  },
+  // Azure Blob SAS. `sv` (service version) and `sig` are always both present.
+  {
+    markers: ["sig", "sv"],
+    params: [
+      "sv", "st", "se", "sr", "sp", "spr", "sig", "sip", "si",
+      "skoid", "sktid", "skt", "ske", "sks", "skv", "rscd", "rsct",
+    ],
+  },
+];
+
+/**
+ * The stable identity of a remote object: its URL, minus anything that changes
+ * without the bytes changing.
+ *
+ * Also sorts the surviving parameters and drops the fragment, so two spellings
+ * of one request do not become two cache entries. The fragment never reaches
+ * the origin in the first place.
+ */
+export function canonicalSourceUrl(input: URL): string {
+  const url = new URL(input.toString());
+  url.hash = "";
+
+  const present = new Set([...url.searchParams.keys()].map((k) => k.toLowerCase()));
+
+  for (const scheme of SIGNING_SCHEMES) {
+    if (!scheme.markers.every((m) => present.has(m))) continue;
+    for (const key of [...url.searchParams.keys()]) {
+      const lower = key.toLowerCase();
+      const drop =
+        (scheme.params?.includes(lower) ?? false) ||
+        (scheme.prefixes?.some((p) => lower.startsWith(p)) ?? false);
+      if (drop) url.searchParams.delete(key);
+    }
+  }
+
+  url.searchParams.sort();
+  return url.toString();
 }
 
 /** Content types worth attempting to decode. Advisory: the decoder decides. */
@@ -84,6 +172,7 @@ export function createRemoteResolver(options: RemoteSourceOptions = {}): SourceR
   const timeout = options.timeout ?? 10_000;
   const maxBytes = options.maxSourceBytes ?? 20 * 1024 * 1024;
   const userAgent = options.userAgent ?? "bun-img";
+  const canIdentify = options.identify ?? true;
   const lookup = options.lookup ?? defaultLookup;
   const doFetch = options.fetch ?? ((url, init) => fetch(url, init));
 
@@ -119,6 +208,82 @@ export function createRemoteResolver(options: RemoteSourceOptions = {}): SourceR
     }
   }
 
+  /**
+   * One deadline for the entire operation — headers, redirects and body.
+   *
+   * A per-request timeout would let a slowloris body run forever after fast
+   * headers, and a redirect chain multiply the budget by `maxRedirects`.
+   */
+  function deadlineFor(context: ResolveContext): AbortSignal {
+    const deadline = AbortSignal.timeout(timeout);
+    return context.signal ? AbortSignal.any([deadline, context.signal]) : deadline;
+  }
+
+  /**
+   * Walk the redirect chain, revalidating every hop, and return the first
+   * non-redirect response.
+   *
+   * `resolve` and `identify` share this so their validation cannot drift: a
+   * `HEAD` that skipped a hop check would be a hole in exactly the defence the
+   * loop exists for.
+   */
+  async function walk(
+    start: URL,
+    method: "GET" | "HEAD",
+    signal: AbortSignal,
+  ): Promise<Response> {
+    let url = start;
+    const seen = new Set<string>();
+
+    for (let hop = 0; hop <= maxRedirects; hop++) {
+      await validate(url);
+
+      // Redirect loops are bounded by maxRedirects anyway; this reports them
+      // as what they are instead of as a redirect-limit overflow.
+      const visited = url.toString();
+      if (seen.has(visited)) {
+        throw new ImageError("FETCH_FAILED", 502, "redirect loop");
+      }
+      seen.add(visited);
+
+      let response: Response;
+      try {
+        response = await doFetch(visited, {
+          method,
+          redirect: "manual",
+          signal,
+          headers: { accept: "image/*", "user-agent": userAgent },
+        });
+      } catch (err) {
+        if (signal.aborted) {
+          throw new ImageError("FETCH_TIMEOUT", 504, "timed out fetching source");
+        }
+        throw new ImageError("FETCH_FAILED", 502, "could not fetch source", { cause: err });
+      }
+
+      if (response.status < 300 || response.status > 399) return response;
+
+      const location = response.headers.get("location");
+      if (location === null) {
+        throw new ImageError("FETCH_FAILED", 502, "redirect without a location");
+      }
+      // Drain so the connection can be reused rather than left dangling.
+      await response.body?.cancel().catch(() => {});
+
+      try {
+        url = new URL(location, visited);
+      } catch {
+        throw new ImageError("FETCH_FAILED", 502, "malformed redirect location");
+      }
+
+      if (hop === maxRedirects) {
+        throw new ImageError("FETCH_FAILED", 502, "too many redirects");
+      }
+    }
+
+    throw new ImageError("FETCH_FAILED", 502, "too many redirects");
+  }
+
   return {
     name: "remote",
 
@@ -126,70 +291,57 @@ export function createRemoteResolver(options: RemoteSourceOptions = {}): SourceR
       return /^https?:\/\//i.test(source);
     },
 
-    async resolve(source: string, context: ResolveContext): Promise<ResolvedSource> {
-      let url: URL;
+    /**
+     * Establish identity with a `HEAD`, so the engine can answer from cache
+     * without downloading anything.
+     *
+     * Returns `null` — never throws — for every failure, including a refusal:
+     * `resolve` is the single place that decides what is allowed, and reporting
+     * it twice would mean two things to keep in agreement. A `null` costs one
+     * fall-through to the slow path, which produces the real error.
+     *
+     * A source with no validator also returns `null`. An identity without a
+     * version cannot detect that the origin changed, and on this path that
+     * would not merely risk a stale answer — it would pin one forever, since
+     * the fast path never opens the source to notice.
+     */
+    async identify(source: string, context: ResolveContext): Promise<SourceIdentity | null> {
+      if (!canIdentify) return null;
+
+      let requested: URL;
       try {
-        url = new URL(source);
+        requested = new URL(source);
+      } catch {
+        return null;
+      }
+
+      try {
+        const response = await walk(requested, "HEAD", deadlineFor(context));
+        await response.body?.cancel().catch(() => {});
+        if (!response.ok) return null;
+
+        // An origin that refuses HEAD, or answers it without a validator, opts
+        // itself out of the fast path rather than breaking.
+        const version =
+          response.headers.get("etag") ?? response.headers.get("last-modified");
+        if (version === null) return null;
+
+        return { id: identityFor(requested), version };
+      } catch {
+        return null;
+      }
+    },
+
+    async resolve(source: string, context: ResolveContext): Promise<ResolvedSource> {
+      let requested: URL;
+      try {
+        requested = new URL(source);
       } catch {
         throw new ImageError("INVALID_REQUEST", 400, "malformed source URL");
       }
 
-      // One deadline for the entire operation — headers, redirects and body.
-      // A per-request timeout would let a slowloris body run forever after fast
-      // headers, and a redirect chain multiply the budget by maxRedirects.
-      const deadline = AbortSignal.timeout(timeout);
-      const signal = context.signal
-        ? AbortSignal.any([deadline, context.signal])
-        : deadline;
-
-      const seen = new Set<string>();
-      let response: Response | undefined;
-
-      for (let hop = 0; hop <= maxRedirects; hop++) {
-        await validate(url);
-
-        // Redirect loops are bounded by maxRedirects anyway; this reports them
-        // as what they are instead of as a redirect-limit overflow.
-        const visited = url.toString();
-        if (seen.has(visited)) {
-          throw new ImageError("FETCH_FAILED", 502, "redirect loop");
-        }
-        seen.add(visited);
-
-        try {
-          response = await doFetch(visited, {
-            redirect: "manual",
-            signal,
-            headers: { accept: "image/*", "user-agent": userAgent },
-          });
-        } catch (err) {
-          if (signal.aborted) {
-            throw new ImageError("FETCH_TIMEOUT", 504, "timed out fetching source");
-          }
-          throw new ImageError("FETCH_FAILED", 502, "could not fetch source", { cause: err });
-        }
-
-        if (response.status < 300 || response.status > 399) break;
-
-        const location = response.headers.get("location");
-        if (location === null) {
-          throw new ImageError("FETCH_FAILED", 502, "redirect without a location");
-        }
-        // Drain so the connection can be reused rather than left dangling.
-        await response.body?.cancel().catch(() => {});
-
-        try {
-          url = new URL(location, visited);
-        } catch {
-          throw new ImageError("FETCH_FAILED", 502, "malformed redirect location");
-        }
-
-        if (hop === maxRedirects) {
-          throw new ImageError("FETCH_FAILED", 502, "too many redirects");
-        }
-      }
-
-      if (!response) throw new ImageError("FETCH_FAILED", 502, "no response");
+      const signal = deadlineFor(context);
+      const response = await walk(requested, "GET", signal);
 
       if (response.status === 404 || response.status === 410) {
         await response.body?.cancel().catch(() => {});
@@ -226,7 +378,7 @@ export function createRemoteResolver(options: RemoteSourceOptions = {}): SourceR
       const lastModified = response.headers.get("last-modified");
       const version = etag ?? lastModified ?? undefined;
 
-      const id = `remote:${url.toString()}`;
+      const id = identityFor(requested);
       return {
         data,
         kind: "remote",
@@ -235,6 +387,18 @@ export function createRemoteResolver(options: RemoteSourceOptions = {}): SourceR
       };
     },
   };
+}
+
+/**
+ * The identity of a requested source.
+ *
+ * Keyed on the URL as *requested*, not the one a redirect landed on. The two
+ * have to agree, because `identify` cannot know the redirect target without
+ * following it, and an identity that disagreed with `resolve`'s would file
+ * every cache entry under a key the fast path then failed to find.
+ */
+function identityFor(requested: URL): string {
+  return `remote:${canonicalSourceUrl(requested)}`;
 }
 
 /**

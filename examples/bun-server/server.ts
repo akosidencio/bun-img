@@ -14,8 +14,16 @@ const images = createImageServer({
   local: { root: new URL("./public/", import.meta.url).pathname },
 
   // Remote sources stay disabled unless patterns are listed — there is no
-  // wildcard, and an empty list means off.
-  // remote: { patterns: [{ protocol: "https", hostname: "images.example.com" }] },
+  // wildcard, and an empty list means off. `hostname` takes one leading `*.`
+  // wildcard; `pathname` globs, where `**` crosses segments and `*` does not.
+  // Presigned URLs work as-is: the signature is stripped from the cache
+  // identity, so a URL reissued every 15 minutes still hits the same entry.
+  // remote: {
+  //   patterns: [
+  //     { protocol: "https", hostname: "my-bucket.s3.ap-southeast-1.amazonaws.com" },
+  //     { protocol: "https", hostname: "*.cloudfront.net", pathname: "/img/**" },
+  //   ],
+  // },
 
   cache: {
     memory: { maxSize: "128MB" },

@@ -167,6 +167,15 @@ export function createImageEngine(options: EngineOptions = {}): ImageEngine {
   });
 
   const cache = buildCache(options.cache);
+  /**
+   * Whether establishing identity up front can pay for itself.
+   *
+   * The fast path exists to answer from cache without opening the source, and
+   * `identify` is not always free — the remote resolver spends a `HEAD` on it.
+   * With no result cache there is nothing to answer from, so that round trip
+   * would buy nothing and every request would pay it.
+   */
+  const cacheable = cache.name !== "null";
   const negatives =
     options.cache?.negative === false ? null : negativeCache(options.cache?.negative ?? {});
 
@@ -451,7 +460,7 @@ export function createImageEngine(options: EngineOptions = {}): ImageEngine {
       };
 
       // ── fast path: key known without touching the source ────────────────
-      const planned = await planFromCache();
+      const planned = cacheable ? await planFromCache() : null;
       if (planned) {
         const hit = await cache.get(planned.key);
         if (hit) return fromCached(hit, planned.key, planned.negotiated, "hit");

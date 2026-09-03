@@ -7,7 +7,12 @@
  * and slowloris all need real HTTP to be worth testing.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
-import { createRemoteResolver, readCapped, type LookupFn } from "../../src/sources/remote.ts";
+import {
+  canonicalSourceUrl,
+  createRemoteResolver,
+  readCapped,
+  type LookupFn,
+} from "../../src/sources/remote.ts";
 import type { RemotePattern } from "../../src/sources/patterns.ts";
 import { resolveConfig } from "../../src/config.ts";
 import { expectCode, makeImage } from "../helpers.ts";
@@ -29,6 +34,8 @@ let server: ReturnType<typeof Bun.serve>;
 let origin: string;
 let loopback: string;
 let pngBytes: Uint8Array;
+/** Every method+path the origin saw, so `identify` can be shown to spend a HEAD. */
+let seen: string[] = [];
 
 /** Rewrites the validated public URL onto the local server. */
 const routedFetch = (url: string, init: RequestInit) =>
@@ -43,6 +50,16 @@ beforeAll(async () => {
     async fetch(request) {
       const url = new URL(request.url);
       const path = url.pathname;
+      seen.push(`${request.method} ${path}`);
+
+      // An origin that refuses HEAD must not break — it opts itself out of the
+      // fast path and the caller falls back to a GET.
+      if (path === "/no-head") {
+        if (request.method === "HEAD") return new Response(null, { status: 405 });
+        return new Response(pngBytes, {
+          headers: { "content-type": "image/png", etag: '"nohead"' },
+        });
+      }
 
       if (path === "/image.png") {
         return new Response(pngBytes, {
@@ -115,7 +132,11 @@ beforeAll(async () => {
 
       if (path.startsWith("/redirect-chain/")) {
         const n = Number(path.slice("/redirect-chain/".length));
-        if (n <= 0) return new Response(pngBytes, { headers: { "content-type": "image/png" } });
+        if (n <= 0) {
+          return new Response(pngBytes, {
+            headers: { "content-type": "image/png", etag: '"chain"' },
+          });
+        }
         return new Response(null, {
           status: 302,
           headers: { location: `${origin}/redirect-chain/${n - 1}` },
@@ -464,5 +485,137 @@ describe("readCapped", () => {
     });
     const out = await readCapped(new Response(stream), 1024);
     expect([...out]).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe("canonicalSourceUrl", () => {
+  const canon = (u: string) => canonicalSourceUrl(new URL(u));
+  const S3 = "https://bucket.s3.ap-southeast-1.amazonaws.com/photos/cat.png";
+
+  test("strips an AWS SigV4 presigned signature", () => {
+    const presigned =
+      `${S3}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA%2Fx` +
+      "&X-Amz-Date=20260903T000000Z&X-Amz-Expires=900" +
+      "&X-Amz-SignedHeaders=host&X-Amz-Signature=deadbeef";
+    expect(canon(presigned)).toBe(S3);
+  });
+
+  test("two signatures for one object canonicalize to the same identity", () => {
+    expect(canon(`${S3}?X-Amz-Signature=aaa&X-Amz-Expires=900`)).toBe(
+      canon(`${S3}?X-Amz-Signature=bbb&X-Amz-Expires=60`),
+    );
+  });
+
+  test("strips a GCS V4 signature", () => {
+    const u = "https://storage.googleapis.com/b/o.png";
+    expect(canon(`${u}?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Signature=beef`)).toBe(u);
+  });
+
+  test("strips a CloudFront signature", () => {
+    const u = "https://d1.cloudfront.net/a.png";
+    expect(canon(`${u}?Expires=123&Signature=abc&Key-Pair-Id=K123`)).toBe(u);
+  });
+
+  test("strips an Azure SAS", () => {
+    const u = "https://acct.blob.core.windows.net/c/a.png";
+    expect(canon(`${u}?sv=2022-11-02&se=2026-01-01&sr=b&sp=r&sig=abc`)).toBe(u);
+  });
+
+  test("keeps ordinary query parameters — they may select content", () => {
+    // The whole point of the marker gate. Dropping `v` would serve v=1's bytes
+    // for a request for v=2, which is worse than any cache miss.
+    expect(canon(`${S3}?v=2`)).toBe(`${S3}?v=2`);
+    expect(canon(`${S3}?v=1`)).not.toBe(canon(`${S3}?v=2`));
+  });
+
+  test("keeps a lone generic parameter that only a full scheme would claim", () => {
+    // `Signature` without `Key-Pair-Id` is not a CloudFront URL, and `sig`
+    // without `sv` is not an Azure SAS.
+    const a = "https://example.com/a.png?Signature=abc";
+    const b = "https://example.com/a.png?sig=abc";
+    expect(canon(a)).toBe(a);
+    expect(canon(b)).toBe(b);
+  });
+
+  test("keeps a signing parameter alongside the content parameters it travels with", () => {
+    expect(canon(`${S3}?v=2&X-Amz-Signature=deadbeef`)).toBe(`${S3}?v=2`);
+  });
+
+  test("parameter order and fragments do not create a second identity", () => {
+    expect(canon(`${S3}?b=2&a=1`)).toBe(canon(`${S3}?a=1&b=2`));
+    expect(canon(`${S3}#hash`)).toBe(S3);
+  });
+});
+
+describe("identify", () => {
+  test("establishes identity with a HEAD, not a GET", async () => {
+    seen = [];
+    const id = await resolver().identify!(`${origin}/image.png`, ctx);
+    expect(id).toEqual({ id: `remote:${origin}/image.png`, version: '"abc123"' });
+    expect(seen).toEqual(["HEAD /image.png"]);
+  });
+
+  test("agrees with resolve on the identity, or the cache would never hit", async () => {
+    const viaHead = await resolver().identify!(`${origin}/image.png`, ctx);
+    const viaGet = await resolver().resolve(`${origin}/image.png`, ctx);
+    expect(viaHead).toEqual(viaGet.identity);
+  });
+
+  test("a rotated signature identifies as the same object", async () => {
+    const a = await resolver().identify!(`${origin}/image.png?X-Amz-Signature=aaa`, ctx);
+    const b = await resolver().identify!(`${origin}/image.png?X-Amz-Signature=bbb`, ctx);
+    expect(a).toEqual(b);
+  });
+
+  test("falls back to Last-Modified", async () => {
+    const id = await resolver().identify!(`${origin}/last-modified`, ctx);
+    expect(id?.version).toBe("Wed, 21 Oct 2026 07:28:00 GMT");
+  });
+
+  test("declines without a validator, rather than pinning a version-less key", async () => {
+    // On the fast path a version-less identity would never notice the origin
+    // changing, because the source is never opened.
+    expect(await resolver().identify!(`${origin}/no-validators`, ctx)).toBeNull();
+  });
+
+  test("declines when the origin refuses HEAD", async () => {
+    expect(await resolver().identify!(`${origin}/no-head`, ctx)).toBeNull();
+  });
+
+  test("declines for a missing source", async () => {
+    expect(await resolver().identify!(`${origin}/missing`, ctx)).toBeNull();
+  });
+
+  test("declines rather than refusing, leaving resolve the single gatekeeper", async () => {
+    expect(await resolver().identify!("https://not-allowed.example.com/a.png", ctx)).toBeNull();
+    await expectCode(
+      () => resolver().resolve("https://not-allowed.example.com/a.png", ctx),
+      "SOURCE_NOT_ALLOWED",
+    );
+  });
+
+  test("declines for a malformed URL", async () => {
+    expect(await resolver().identify!("http://", ctx)).toBeNull();
+  });
+
+  test("re-validates every redirect hop, exactly as resolve does", async () => {
+    // The cheaper path must not become the way around the allowlist.
+    expect(await resolver().identify!(`${origin}/redirect-to-metadata`, ctx)).toBeNull();
+    expect(await resolver().identify!(`${origin}/redirect-offsite`, ctx)).toBeNull();
+  });
+
+  test("identity is the requested URL, not the redirect target", async () => {
+    // identify cannot know the target without following it, so resolve must
+    // key on the same thing or the two would file entries under different keys.
+    const viaHead = await resolver().identify!(`${origin}/redirect-chain/1`, ctx);
+    const viaGet = await resolver().resolve(`${origin}/redirect-chain/1`, ctx);
+    expect(viaHead?.id).toBe(`remote:${origin}/redirect-chain/1`);
+    expect(viaGet.identity.id).toBe(`remote:${origin}/redirect-chain/1`);
+  });
+
+  test("is absent when disabled, so the engine never spends the round trip", async () => {
+    seen = [];
+    expect(await resolver({ identify: false }).identify!(`${origin}/image.png`, ctx)).toBeNull();
+    expect(seen).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { createImageEngine } from "../src/engine.ts";
 import { capabilities } from "../src/capabilities.ts";
 import { contentTypeFor, readSourceInfo, runTransform } from "../src/transform.ts";
@@ -382,5 +382,121 @@ describe("engine config", () => {
   test("sorts widths regardless of input order", () => {
     const e = createImageEngine({ widths: [1024, 320, 640] });
     expect(e.config.widths).toEqual([320, 640, 1024]);
+  });
+});
+
+/**
+ * The point of `identify`: a warm cache is answered without downloading the
+ * source. Before it existed, every request re-fetched the whole body and the
+ * cache only saved the encode.
+ */
+describe("engine.optimize — remote sources", () => {
+  const HOST = "images.test";
+  const ORIGIN = `http://${HOST}`;
+
+  let server: ReturnType<typeof Bun.serve>;
+  let loopback: string;
+  let png: Uint8Array;
+  let gets = 0;
+  let heads = 0;
+
+  beforeAll(async () => {
+    png = await makeImage(256, 256, "png");
+    server = Bun.serve({
+      port: 0,
+      hostname: "127.0.0.1",
+      fetch(request) {
+        const headers = { "content-type": "image/png", etag: '"v1"' };
+        if (new URL(request.url).pathname === "/no-validator") {
+          return new Response(png, { headers: { "content-type": "image/png" } });
+        }
+        if (request.method === "HEAD") {
+          heads++;
+          return new Response(null, { headers });
+        }
+        gets++;
+        return new Response(png, { headers });
+      },
+    });
+    loopback = `http://127.0.0.1:${server.port}`;
+  });
+
+  afterAll(() => server.stop(true));
+
+  function engineWith(over: Record<string, unknown> = {}, cache = true) {
+    return createImageEngine({
+      remote: {
+        patterns: [{ protocol: "http", hostname: HOST }],
+        lookup: async () => [{ address: "93.184.216.34", family: 4 }],
+        fetch: (url, init) => fetch(url.replace(ORIGIN, loopback), init),
+        ...over,
+      },
+      ...(cache ? { cache: { memory: { maxSize: "8MB" } } } : {}),
+    });
+  }
+
+  test("a repeat request hits the cache without downloading the source again", async () => {
+    gets = heads = 0;
+    const engine = engineWith();
+    const src = `${ORIGIN}/a.png`;
+
+    const first = await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    const second = await engine.optimize({ src, transform: { width: 128, format: "png" } });
+
+    expect(first.cache).toBe("miss");
+    expect(second.cache).toBe("hit");
+    expect(gets).toBe(1);
+    expect(heads).toBeGreaterThan(0);
+  });
+
+  test("a rotated presigned signature still hits the same cache entry", async () => {
+    gets = heads = 0;
+    const engine = engineWith();
+    const base = `${ORIGIN}/signed.png`;
+
+    const first = await engine.optimize({
+      src: `${base}?X-Amz-Signature=aaa&X-Amz-Expires=900`,
+      transform: { width: 128, format: "png" },
+    });
+    const second = await engine.optimize({
+      src: `${base}?X-Amz-Signature=bbb&X-Amz-Expires=900`,
+      transform: { width: 128, format: "png" },
+    });
+
+    expect(first.cache).toBe("miss");
+    expect(second.cache).toBe("hit");
+    expect(first.key).toBe(second.key);
+    expect(gets).toBe(1);
+  });
+
+  test("a source with no validator still works, by way of the slow path", async () => {
+    const engine = engineWith();
+    const src = `${ORIGIN}/no-validator`;
+    const out = await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    // 128 quantizes up to 320, then clamps back to the 256-wide source.
+    expect(out.width).toBe(256);
+    // No validator, so nothing to key a version on — and `identify` declined,
+    // which is what sent this down the slow path in the first place.
+    expect(out.sourceVersion).toBeUndefined();
+  });
+
+  test("no HEAD is spent when there is no cache to answer from", async () => {
+    gets = heads = 0;
+    const engine = engineWith({}, false);
+    const src = `${ORIGIN}/b.png`;
+    await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    expect(heads).toBe(0);
+  });
+
+  test("identify: false falls back to downloading on every request", async () => {
+    gets = heads = 0;
+    const engine = engineWith({ identify: false });
+    const src = `${ORIGIN}/c.png`;
+    await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    const second = await engine.optimize({ src, transform: { width: 128, format: "png" } });
+    expect(second.cache).toBe("hit");
+    expect(heads).toBe(0);
+    expect(gets).toBe(2);
   });
 });

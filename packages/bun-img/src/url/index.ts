@@ -16,6 +16,17 @@ function badRequest(message: string): never {
   throw new ImageError("INVALID_REQUEST", 400, message);
 }
 
+/**
+ * An absolute http(s) source, which only the query protocol can carry.
+ *
+ * The operation-path form encodes the source as path segments, and a URL's
+ * `//` cannot survive that: it collapses to a single slash on the way back out.
+ * Rather than emit something that parses into a subtly different string, the
+ * builders switch protocol for these. `bun-img/next/loader` carries its own
+ * copy of this test — it is bundled standalone for the client and cannot import.
+ */
+const REMOTE_SOURCE = /^https?:\/\//i;
+
 export interface ParsedImageRequest {
   /** Source reference, exactly as written. Resolution is Phase 2's job. */
   readonly source: string;
@@ -41,12 +52,18 @@ function normalizeBasePath(basePath: string): string {
  * The comma form is canonical. It keeps the whole transform in a single path
  * segment, which removes any ambiguity about where operations end and the
  * source path begins.
+ *
+ * Absolute http(s) sources are emitted in the query form instead — see
+ * `REMOTE_SOURCE`. Both forms parse to the same source and transform, so the
+ * caller does not have to know which one it got.
  */
 export function imageUrl(
   source: string,
   transform: ImageTransform = {},
   options: UrlOptions = {},
 ): string {
+  if (REMOTE_SOURCE.test(source)) return imageQueryUrl(source, transform, options);
+
   const base = normalizeBasePath(options.basePath ?? "/_image");
   const pairs = opPairs(transform);
   const cleanSource = source.startsWith("/") ? source.slice(1) : source;
