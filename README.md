@@ -183,6 +183,11 @@ imageUrl("https://my-bucket.s3.ap-southeast-1.amazonaws.com/cat.png", { width: 6
 Private buckets that need signing by the server — an `s3://` source with
 credentials — are on the roadmap; today, presign the URL upstream and pass it in.
 
+`examples/bun-server` has this wired to two live CDNs, and
+`bun examples/bun-server/smoke.ts` checks it end-to-end against the real
+internet — including that an unlisted host, and a redirect *to* an unlisted
+host, are both refused.
+
 ## Entrypoints
 
 | Import | What it is |
