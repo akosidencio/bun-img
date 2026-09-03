@@ -55,7 +55,7 @@ export type { Coalescer, CoalescerStats } from "./concurrency/coalescer.ts";
 
 export { createLocalResolver } from "./sources/local.ts";
 export type { LocalSourceOptions } from "./sources/local.ts";
-export { createRemoteResolver, readCapped } from "./sources/remote.ts";
+export { canonicalSourceUrl, createRemoteResolver, readCapped } from "./sources/remote.ts";
 export type { RemoteSourceOptions, LookupFn, FetchFn } from "./sources/remote.ts";
 export { createSourceRegistry } from "./sources/registry.ts";
 export type { SourceRegistry, SourceRegistryOptions } from "./sources/registry.ts";
